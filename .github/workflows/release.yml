@@ -64,6 +64,13 @@ jobs:
             }
           "
 
+      - name: Run Snyk security scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
       - name: Publish
         run: npm publish --access public --provenance
         env:
