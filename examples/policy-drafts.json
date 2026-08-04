@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1.0",
+  "generatedAt": "2026-07-25T12:00:00.000Z",
+  "env": "prod",
+  "policies": [
+    {
+      "policyKey": "login-protection",
+      "activeVersion": 1,
+      "defaults": {
+        "effect": "allow"
+      },
+      "rules": [
+        {
+          "id": "deny-after-five-failures",
+          "status": "active",
+          "priority": 100,
+          "target": {
+            "service": "auth",
+            "resource": "login",
+            "action": "authenticate"
+          },
+          "when": {
+            "op": "gte",
+            "path": "ctx.failedAttempts",
+            "value": 5
+          },
+          "effect": {
+            "type": "deny"
+          }
+        }
+      ]
+    },
+    {
+      "policyKey": "refund-control",
+      "activeVersion": 1,
+      "defaults": {
+        "effect": "deny"
+      },
+      "rules": []
+    }
+  ]
+}

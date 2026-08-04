@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "draft": {
+    "path": "policy-drafts.json"
+  },
+  "bundle": {
+    "path": "policy-bundle.json"
+  }
+}

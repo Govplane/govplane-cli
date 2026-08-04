@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "orgId": "org_demo",
+  "projectId": "proj_payments",
+  "env": "prod",
+  "generatedAt": "2026-07-25T12:00:00.000Z",
+  "bundleVersion": 1,
+  "policies": [
+    {
+      "policyKey": "api-request-control",
+      "activeVersion": 3,
+      "defaults": {
+        "effect": "allow"
+      },
+      "rules": [
+        {
+          "id": "deny-admin-from-public",
+          "status": "active",
+          "priority": 100,
+          "target": {
+            "service": "api-gateway",
+            "resource": "*",
+            "action": "request"
+          },
+          "when": {
+            "op": "and",
+            "conditions": [
+              {
+                "op": "eq",
+                "path": "ctx.scope",
+                "value": "public"
+              },
+              {
+                "op": "in",
+                "path": "ctx.path",
+                "values": [
+                  "/admin",
+                  "/internal"
+                ]
+              }
+            ]
+          },
+          "effect": {
+            "type": "deny"
+          }
+        },
+        {
+          "id": "throttle-anonymous",
+          "status": "active",
+          "priority": 50,
+          "target": {
+            "service": "api-gateway",
+            "resource": "*",
+            "action": "request"
+          },
+          "when": {
+            "op": "not",
+            "condition": {
+              "op": "exists",
+              "path": "ctx.userId"
+            }
+          },
+          "effect": {
+            "type": "throttle",
+            "throttle": {
+              "limit": 60,
+              "windowSeconds": 60,
+              "key": "ip"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "policyKey": "login-protection",
+      "activeVersion": 1,
+      "defaults": {
+        "effect": "allow"
+      },
+      "rules": [
+        {
+          "id": "deny-after-five-failures",
+          "status": "active",
+          "priority": 100,
+          "target": {
+            "service": "auth",
+            "resource": "login",
+            "action": "authenticate"
+          },
+          "when": {
+            "op": "gte",
+            "path": "ctx.failedAttempts",
+            "value": 5
+          },
+          "effect": {
+            "type": "deny"
+          }
+        }
+      ]
+    },
+    {
+      "policyKey": "refund-control",
+      "activeVersion": 2,
+      "defaults": {
+        "effect": "deny"
+      },
+      "rules": [
+        {
+          "id": "allow-small-refunds",
+          "status": "active",
+          "priority": 80,
+          "target": {
+            "service": "payments",
+            "resource": "refund",
+            "action": "execute"
+          },
+          "when": {
+            "op": "lte",
+            "path": "ctx.amount",
+            "value": 100
+          },
+          "effect": {
+            "type": "allow"
+          }
+        },
+        {
+          "id": "kill-switch-refunds",
+          "status": "disabled",
+          "priority": 10,
+          "target": {
+            "service": "payments",
+            "resource": "refund",
+            "action": "execute"
+          },
+          "effect": {
+            "type": "kill_switch",
+            "killSwitch": {
+              "service": "payments",
+              "reason": "incident response"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "checksum": "sha256:e0ae1d3f59e5beb6d0f9008c65e35dc52211062dc98ce6e366a66033666ecdf7",
+  "signature": {
+    "algorithm": "Ed25519",
+    "keyId": "demo-signing-key-01",
+    "value": "jEFB5eCk8DL4SlpWEgBiQ+ty7kVziUrLjsxH0B8Q0TFtlcuOfY6LF38C3+TKjkVAbT2o2U5jV0a1IkDFEzyCBw=="
+  }
+}
