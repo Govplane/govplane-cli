@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-08-05
+
+### Changed
+
+- **The advanced toolkit is now called the CLI Toolkit, not the Runtime Kit.**
+  The old name suggested something that ran alongside the runtime; it is a set
+  of commands that extends the CLI, and it is now named after what it is.
+
+  The rename reaches the programmatic API. Every one of these symbols shipped in
+  1.0.0, so anything importing them must be updated:
+
+  | 1.0.0 | 1.0.1 |
+  | --- | --- |
+  | `detectRuntimeKit` | `detectToolkit` |
+  | `runtimeKitRequiredMessage` | `toolkitRequiredMessage` |
+  | `runtimeKitManifestPath` | `toolkitManifestPath` |
+  | `runtimeKitCommands` | `toolkitCommands` |
+  | `RuntimeKitStatus` | `ToolkitStatus` |
+  | `ResolvedRuntimeKit` | `ResolvedToolkit` |
+  | `ExitCode.RuntimeKitUnavailable` | `ExitCode.ToolkitUnavailable` |
+  | `CommandDefinition.requiresRuntimeKit` | `requiresToolkit` |
+  | `CommandContext.runtimeKit` | `toolkit` |
+  | command group `'runtime-kit'` | `'toolkit'` |
+
+  **Exit code values are unchanged.** `ToolkitUnavailable` is still `7`, and no
+  other code moved, so shell scripts and CI pipelines that branch on exit status
+  are unaffected.
+
+- `govplane version --format json` reports the toolkit under `toolkit` rather
+  than `runtimeKit`. Automation reading that field must be updated; every other
+  field is unchanged.
+- The `--install-kit` flag keeps its name, so existing scripts and documentation
+  that invoke it continue to work. Only its wording changed.
+- Documentation no longer describes remote bundle materialisation as producing a
+  "safe bundle". The SDK replaced that concept with local bundles, which may come
+  from any source and are verified identically, and the CLI's wording now matches.
+
 ### Fixed
 
 - `validate` no longer rejects a bundle whose `bundleVersion` is greater than 1.
@@ -25,8 +62,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optional `stdin` on `CliStreams` and `CommandContext`, for commands that
   prompt. Kept optional and paired with an `isTTY` check so a command never
   blocks waiting on input that is not there.
-- `runtimeKitCommands` is exported, so the toolkit can assert it implements
-  every command the CLI declares a placeholder for.
 
 ## [1.0.0] - 2026-07-29
 
@@ -59,5 +94,6 @@ First open-source release of the Govplane CLI.
 - A programmatic API exporting the validation, canonicalisation and summary
   building blocks.
 
-[Unreleased]: https://github.com/govplane/govplane-cli/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/govplane/govplane-cli/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/govplane/govplane-cli/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/govplane/govplane-cli/releases/tag/v1.0.0

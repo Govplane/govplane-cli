@@ -44,7 +44,7 @@ Infrastructure with no policy knowledge:
 | `userConfig.ts` | The user-level configuration file |
 | `files.ts` | Guarded reads, atomic writes, backups |
 | `json.ts` | Non-throwing JSON parsing with line/column positions |
-| `runtimeKit.ts` | Local CLI Toolkit detection |
+| `toolkit.ts` | Local CLI Toolkit detection |
 | `errors.ts`, `exitCodes.ts` | The error type and the exit-code contract |
 
 ### `src/domain`

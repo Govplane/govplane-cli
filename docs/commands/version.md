@@ -57,7 +57,7 @@ govplane version --format json
   "nodeVersion": "22.4.0",
   "platform": "darwin",
   "architecture": "arm64",
-  "runtimeKit": { "installed": false, "version": null }
+  "toolkit": { "installed": false, "version": null }
 }
 ```
 
