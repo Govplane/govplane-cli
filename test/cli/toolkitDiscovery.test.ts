@@ -9,7 +9,7 @@ import {
 import { loadToolkit, TOOLKIT_PACKAGE } from '../../src/core/toolkitBridge.js';
 
 /**
- * Finding the Runtime Kit.
+ * Finding the CLI Toolkit.
  *
  * The kit is resolved by name, which works for an ordinary `npm install -g`.
  * It does **not** work when either package is installed from a local directory:
@@ -57,13 +57,13 @@ export const commands = [{
   name: 'build',
   summary: 'Build a policy bundle',
   usage: 'govplane build',
-  requiresRuntimeKit: true,
+  requiresToolkit: true,
   options: [],
   run: () => 0,
 }];
 `;
 
-describe('loading the Runtime Kit', () => {
+describe('loading the CLI Toolkit', () => {
   const originalArgv1 = process.argv[1];
   let layout: Layout | null = null;
 
@@ -140,7 +140,7 @@ describe('loading the Runtime Kit', () => {
     layout = installKit({
       commands: `
         export const commands = [
-          { name: 'good', summary: 's', usage: 'u', requiresRuntimeKit: true, options: [], run: () => 0 },
+          { name: 'good', summary: 's', usage: 'u', requiresToolkit: true, options: [], run: () => 0 },
           { name: 'no-run' },
           null,
           'nonsense',

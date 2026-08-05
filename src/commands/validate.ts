@@ -155,7 +155,7 @@ export const validateCommand: CommandDefinition = {
   summary: 'Validate a policy draft or bundle',
   usage: 'govplane validate [file] [options]',
   description: 'Validate a Govplane policy draft or bundle. The file is never modified.',
-  requiresRuntimeKit: false,
+  requiresToolkit: false,
   arguments: [
     { name: 'file', description: 'Draft or bundle file to validate' },
   ],

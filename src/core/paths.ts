@@ -21,8 +21,8 @@ export const userConfigPath = (env?: NodeJS.ProcessEnv): string => (
   join(resolveGovplaneHome(env), 'config.json')
 );
 
-/** Manifest written by the Runtime Kit installer once the toolkit is activated. */
-export const runtimeKitManifestPath = (env?: NodeJS.ProcessEnv): string => (
+/** Manifest written by the CLI Toolkit installer once the toolkit is activated. */
+export const toolkitManifestPath = (env?: NodeJS.ProcessEnv): string => (
   join(resolveGovplaneHome(env), 'kit', 'kit.json')
 );
 

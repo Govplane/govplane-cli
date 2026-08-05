@@ -1,7 +1,7 @@
-# Runtime Kit commands
+# CLI Toolkit commands
 
 `analyze`, `build`, `sign`, `simulate` and `policies` belong to the **Govplane
-Runtime Kit** — the free advanced toolkit. They are documented by the CLI so
+CLI Toolkit** — the free advanced toolkit. They are documented by the CLI so
 you can discover them, but they are not part of the basic CLI package.
 
 | Command | Purpose |
@@ -18,9 +18,9 @@ Running one of these commands never starts a download, a registration flow or
 any network request. The CLI explains what is needed and exits with code `7`:
 
 ```text
-The build command requires the Govplane Runtime Kit.
+The build command requires the Govplane CLI Toolkit.
 
-The Runtime Kit is free and runs locally.
+The CLI Toolkit is free and runs locally.
 
 Install it with:
   govplane --install-kit
@@ -35,13 +35,13 @@ govplane --install-kit
 Explains how to enable the toolkit:
 
 ```text
-The Govplane Runtime Kit is free and runs locally.
+The Govplane CLI Toolkit is free and runs locally.
 
 Install it with:
   npm install --global @govplane/toolkit
 
 The basic CLI commands — validate, inspect, version, help and working-folder —
-never require the Runtime Kit, an account or network access.
+never require the CLI Toolkit, an account or network access.
 ```
 
 When the kit is already installed, the command reports its version and manifest
@@ -64,4 +64,4 @@ the basic CLI never asks a Govplane service whether you have the kit.
 
 | Code | Meaning |
 | ---- | ------- |
-| `7` | Runtime Kit unavailable or inactive |
+| `7` | CLI Toolkit unavailable or inactive |

@@ -5,7 +5,7 @@ import { readTextFile } from './files.js';
 import { parseJson } from './json.js';
 import type { CommandDefinition } from '../commands/types.js';
 
-/** Package that provides the Runtime Kit commands when it is installed. */
+/** Package that provides the CLI Toolkit commands when it is installed. */
 export const TOOLKIT_PACKAGE = '@govplane/toolkit';
 
 const isCommandDefinition = (value: unknown): value is CommandDefinition => {
@@ -19,7 +19,7 @@ const isCommandDefinition = (value: unknown): value is CommandDefinition => {
 };
 
 /**
- * Loads the Runtime Kit's commands, if the kit is installed alongside the CLI.
+ * Loads the CLI Toolkit's commands, if the kit is installed alongside the CLI.
  *
  * The specifier is held in a variable on purpose: the basic CLI must not declare
  * a dependency on the toolkit — that would invert the relationship and drag the

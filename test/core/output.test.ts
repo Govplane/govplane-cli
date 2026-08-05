@@ -7,7 +7,7 @@ import {
 } from '../../src/core/environment.js';
 import { parseJson, stringifyJson } from '../../src/core/json.js';
 import { Reporter } from '../../src/core/reporter.js';
-import { resolveGovplaneHome, runtimeKitManifestPath } from '../../src/core/paths.js';
+import { resolveGovplaneHome, toolkitManifestPath } from '../../src/core/paths.js';
 import { memoryStream } from '../helpers/harness.js';
 
 const createReporter = (options: Partial<ConstructorParameters<typeof Reporter>[0]> = {}) => {
@@ -153,7 +153,7 @@ describe('environment', () => {
 describe('paths', () => {
   it('prefers GOVPLANE_HOME', () => {
     expect(resolveGovplaneHome({ GOVPLANE_HOME: '/custom' })).toBe('/custom');
-    expect(runtimeKitManifestPath({ GOVPLANE_HOME: '/custom' })).toBe('/custom/kit/kit.json');
+    expect(toolkitManifestPath({ GOVPLANE_HOME: '/custom' })).toBe('/custom/kit/kit.json');
   });
 
   it('falls back to the user profile', () => {

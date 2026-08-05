@@ -16,7 +16,7 @@ export interface ProjectConfig {
   /** Optional verification material for `govplane inspect --signature`. */
   signature?: { publicKeyPath?: string };
   limits?: { maxFileBytes?: number };
-  /** Settings for the Runtime Kit's `policies` command. */
+  /** Settings for the CLI Toolkit's `policies` command. */
   policies?: {
     versioning?: { enabled?: boolean };
     defaultFormat?: string;

@@ -12,7 +12,7 @@ Exit codes are part of the CLI's stable contract: automation can rely on them.
 | `3` | Invalid CLI arguments |
 | `4` | Compatibility failure — command-specific, see below |
 | `5` | Unexpected internal error |
-| `7` | Runtime Kit unavailable or inactive |
+| `7` | CLI Toolkit unavailable or inactive |
 
 Code `4` is command-scoped:
 
@@ -67,11 +67,11 @@ Code `4` is command-scoped:
 | `3` | Unknown subcommand, or `set` without a path |
 | `5` | Unexpected internal error |
 
-### Runtime Kit commands
+### CLI Toolkit commands
 
 | Code | Condition |
 | ---- | --------- |
-| `7` | The Runtime Kit is not installed, or this CLI build cannot run the command |
+| `7` | The CLI Toolkit is not installed, or this CLI build cannot run the command |
 
 ## Using the codes in CI
 

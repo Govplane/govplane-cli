@@ -10,7 +10,7 @@ import { systemClock, type Clock } from './core/clock.js';
 import { isSupportedNodeVersion, unsupportedNodeMessage } from './core/environment.js';
 import { CliError, invalidArguments, isCliError } from './core/errors.js';
 import { ExitCode, type ExitCodeValue } from './core/exitCodes.js';
-import { detectRuntimeKit, type ResolvedRuntimeKit } from './core/runtimeKit.js';
+import { detectToolkit, type ResolvedToolkit } from './core/toolkit.js';
 import { loadToolkit } from './core/toolkitBridge.js';
 import { supportsColor } from './core/color.js';
 import {
@@ -35,7 +35,7 @@ export interface RunOptions {
   /** Overrides the time source, so time-dependent output can be pinned in tests. */
   now?: Clock;
   /**
-   * Commands contributed by the Runtime Kit. The `govplane` launcher discovers
+   * Commands contributed by the CLI Toolkit. The `govplane` launcher discovers
    * them with `loadToolkit()`; the toolkit's own launcher and the test suite
    * pass them directly.
    */
@@ -44,7 +44,7 @@ export interface RunOptions {
    * Kit presence for this invocation. Supplied by whoever loaded the toolkit,
    * since a loaded toolkit is better evidence than a manifest on disk.
    */
-  runtimeKit?: ResolvedRuntimeKit;
+  toolkit?: ResolvedToolkit;
 }
 
 /** Options accepted by every command, regardless of its own option list. */
@@ -140,11 +140,11 @@ const assertOptionsAllowed = (command: CommandDefinition, options: ParsedOptions
 const printInstallKitGuidance = (
   reporter: Reporter,
   env: NodeJS.ProcessEnv,
-  kit: ResolvedRuntimeKit,
+  kit: ResolvedToolkit,
 ): ExitCodeValue => {
   if (kit.installed) {
     reporter.line(
-      `Govplane Runtime Kit is already installed (${kit.version ?? 'unknown version'}).`,
+      `Govplane CLI Toolkit is already installed (${kit.version ?? 'unknown version'}).`,
     );
     reporter.line();
     reporter.line('Activate it — free, and only needs an email address:');
@@ -155,15 +155,15 @@ const printInstallKitGuidance = (
     return ExitCode.Success;
   }
 
-  reporter.debug(`Kit manifest looked for at: ${detectRuntimeKit(env).manifestPath}`);
+  reporter.debug(`Kit manifest looked for at: ${detectToolkit(env).manifestPath}`);
 
-  reporter.line('The Govplane Runtime Kit is free and runs locally.');
+  reporter.line('The Govplane CLI Toolkit is free and runs locally.');
   reporter.line();
   reporter.line('Install it with:');
   reporter.line('  npm install --global @govplane/toolkit');
   reporter.line();
   reporter.line('The basic CLI commands — validate, inspect, version, help and working-folder —');
-  reporter.line('never require the Runtime Kit, an account or network access.');
+  reporter.line('never require the CLI Toolkit, an account or network access.');
   return ExitCode.Success;
 };
 
@@ -200,9 +200,9 @@ export const run = async (argv: string[], options: RunOptions = {}): Promise<num
   const cwd = options.cwd ?? process.cwd();
   const env = options.env ?? process.env;
   const now = options.now ?? systemClock;
-  const runtimeKit: ResolvedRuntimeKit = options.runtimeKit
-    ?? ((): ResolvedRuntimeKit => {
-      const detected = detectRuntimeKit(env);
+  const toolkit: ResolvedToolkit = options.toolkit
+    ?? ((): ResolvedToolkit => {
+      const detected = detectToolkit(env);
       return { installed: detected.installed, version: detected.version };
     })();
 
@@ -244,7 +244,7 @@ export const run = async (argv: string[], options: RunOptions = {}): Promise<num
     });
 
     if (readBoolean(parsed.options, 'install-kit')) {
-      return printInstallKitGuidance(reporter, env, runtimeKit);
+      return printInstallKitGuidance(reporter, env, toolkit);
     }
 
     const name = known ?? parsed.positionals[0];
@@ -264,7 +264,7 @@ export const run = async (argv: string[], options: RunOptions = {}): Promise<num
           reporter,
           now,
           commands: available,
-          runtimeKit,
+          toolkit,
         });
       }
       renderGeneralHelp(reporter, available);
@@ -301,7 +301,7 @@ export const run = async (argv: string[], options: RunOptions = {}): Promise<num
       reporter,
       now,
       commands: available,
-      runtimeKit,
+      toolkit,
       ...(streams.stdin === undefined ? {} : { stdin: streams.stdin }),
     });
   } catch (error) {
@@ -312,22 +312,25 @@ export const run = async (argv: string[], options: RunOptions = {}): Promise<num
 /**
  * Entry point used by `bin/govplane.js`.
  *
- * This is where the Runtime Kit is discovered: when the toolkit is installed
+ * This is where the CLI Toolkit is discovered: when the toolkit is installed
  * alongside the CLI its commands take over the built-in placeholders, and when
  * it is not, the basic CLI behaves exactly as before.
  */
 export const main = async (argv: string[]): Promise<number> => {
-  const toolkit = await loadToolkit();
+  // Named `loaded` rather than `toolkit` so it does not read as the `toolkit`
+  // option it feeds: one is the bridge's load result, the other the resolved
+  // availability the commands see.
+  const loaded = await loadToolkit();
   return run(argv, {
-    extraCommands: toolkit.commands,
-    ...(toolkit.commands.length > 0
-      ? { runtimeKit: { installed: true, version: toolkit.version } }
+    extraCommands: loaded.commands,
+    ...(loaded.commands.length > 0
+      ? { toolkit: { installed: true, version: loaded.version } }
       : {
-        runtimeKit: {
+        toolkit: {
           installed: false,
           version: null,
-          failure: toolkit.failure,
-          resolutionDetail: toolkit.resolutionDetail,
+          failure: loaded.failure,
+          resolutionDetail: loaded.resolutionDetail,
         },
       }),
   });

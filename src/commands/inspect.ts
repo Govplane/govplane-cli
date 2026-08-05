@@ -381,7 +381,7 @@ export const inspectCommand: CommandDefinition = {
   usage: 'govplane inspect [file] [options]',
   description: 'Display a human-readable summary of a Govplane draft or bundle. '
     + 'The file is never modified.',
-  requiresRuntimeKit: false,
+  requiresToolkit: false,
   arguments: [
     { name: 'file', description: 'Draft or bundle file to inspect' },
   ],

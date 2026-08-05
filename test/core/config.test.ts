@@ -9,7 +9,7 @@ import {
 import {
   clearPersistedWorkingFolder, readUserConfig, setPersistedWorkingFolder,
 } from '../../src/core/userConfig.js';
-import { detectRuntimeKit } from '../../src/core/runtimeKit.js';
+import { detectToolkit } from '../../src/core/toolkit.js';
 import { DEFAULT_MAX_FILE_BYTES } from '../../src/core/files.js';
 import { createSandbox, type Sandbox } from '../helpers/harness.js';
 
@@ -107,7 +107,7 @@ describe('user configuration', () => {
   });
 });
 
-describe('runtime kit detection', () => {
+describe('CLI toolkit detection', () => {
   let sandbox: Sandbox;
 
   beforeEach(() => {
@@ -119,7 +119,7 @@ describe('runtime kit detection', () => {
   });
 
   it('reports the kit as missing when no manifest exists', () => {
-    const status = detectRuntimeKit(sandbox.env);
+    const status = detectToolkit(sandbox.env);
     expect(status.installed).toBe(false);
     expect(status.version).toBeNull();
   });
@@ -128,7 +128,7 @@ describe('runtime kit detection', () => {
     mkdirSync(join(sandbox.home, 'kit'), { recursive: true });
     writeFileSync(join(sandbox.home, 'kit', 'kit.json'), JSON.stringify({ version: '1.2.3' }));
 
-    const status = detectRuntimeKit(sandbox.env);
+    const status = detectToolkit(sandbox.env);
     expect(status.installed).toBe(true);
     expect(status.version).toBe('1.2.3');
   });

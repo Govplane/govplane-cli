@@ -32,7 +32,7 @@ Node.js:
 Platform:
   darwin-arm64
 
-Runtime Kit:
+CLI Toolkit:
   Not installed
 
 Configuration:

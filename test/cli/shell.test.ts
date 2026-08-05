@@ -24,7 +24,7 @@ describe('command dispatch', () => {
     expect(result.code).toBe(ExitCode.Success);
     expect(result.stdout).toContain('Usage:');
     expect(result.stdout).toContain('Basic commands:');
-    expect(result.stdout).toContain('Runtime Kit commands:');
+    expect(result.stdout).toContain('CLI Toolkit commands:');
   });
 
   it('documents a single command', async () => {
@@ -61,14 +61,14 @@ describe('command dispatch', () => {
   });
 
 
-  it('reports Runtime Kit commands as unavailable without installing anything', async () => {
+  it('reports CLI Toolkit commands as unavailable without installing anything', async () => {
     const result = await runCli(['build'], sandbox);
-    expect(result.code).toBe(ExitCode.RuntimeKitUnavailable);
-    expect(result.stderr).toContain('requires the Govplane Runtime Kit');
+    expect(result.code).toBe(ExitCode.ToolkitUnavailable);
+    expect(result.stderr).toContain('requires the Govplane CLI Toolkit');
     expect(result.stderr).toContain('govplane --install-kit');
   });
 
-  it('explains how to install the Runtime Kit', async () => {
+  it('explains how to install the CLI Toolkit', async () => {
     const result = await runCli(['--install-kit'], sandbox);
     expect(result.code).toBe(ExitCode.Success);
     expect(result.stdout).toContain('npm install --global @govplane/toolkit');
@@ -99,7 +99,7 @@ describe('govplane version', () => {
   it('prints diagnostics in verbose mode', async () => {
     const result = await runCli(['version', '--verbose'], sandbox);
     expect(result.stdout).toContain('Node.js:');
-    expect(result.stdout).toContain('Runtime Kit:');
+    expect(result.stdout).toContain('CLI Toolkit:');
     expect(result.stdout).toContain('Not installed');
   });
 
@@ -107,7 +107,7 @@ describe('govplane version', () => {
     const result = await runCli(['version', '--format', 'json'], sandbox);
     const payload = result.json() as Record<string, unknown>;
     expect(payload.cliVersion).toBeDefined();
-    expect(payload.runtimeKit).toEqual({ installed: false, version: null });
+    expect(payload.toolkit).toEqual({ installed: false, version: null });
   });
 });
 

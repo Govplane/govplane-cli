@@ -92,7 +92,7 @@ project-root/
         └── temp/
 ```
 
-Every command — basic and Runtime Kit alike — honours the same flag:
+Every command — basic and CLI Toolkit alike — honours the same flag:
 
 ```bash
 govplane validate -w ./governance

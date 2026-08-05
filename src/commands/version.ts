@@ -50,7 +50,7 @@ const fetchLatestVersion = async (): Promise<LatestVersion> => {
 const run = async (context: CommandContext): Promise<ExitCodeValue> => {
   const { reporter } = context;
   const cliVersion = readCliVersion();
-  const {runtimeKit} = context;
+  const {toolkit} = context;
   const check = readBoolean(context.options, 'check');
   const latest = check ? await fetchLatestVersion() : undefined;
 
@@ -60,7 +60,7 @@ const run = async (context: CommandContext): Promise<ExitCodeValue> => {
       nodeVersion: process.versions.node,
       platform: process.platform,
       architecture: process.arch,
-      runtimeKit: { installed: runtimeKit.installed, version: runtimeKit.version },
+      toolkit: { installed: toolkit.installed, version: toolkit.version },
       ...(latest
         ? {
           updateCheck: {
@@ -92,8 +92,8 @@ const run = async (context: CommandContext): Promise<ExitCodeValue> => {
     reporter.line('Platform:');
     reporter.line(`  ${process.platform}-${process.arch}`);
     reporter.line();
-    reporter.line('Runtime Kit:');
-    reporter.line(`  ${runtimeKit.installed ? runtimeKit.version ?? 'Installed' : 'Not installed'}`);
+    reporter.line('CLI Toolkit:');
+    reporter.line(`  ${toolkit.installed ? toolkit.version ?? 'Installed' : 'Not installed'}`);
     reporter.line();
     reporter.line('Configuration:');
     reporter.line(`  ${userConfigPath(context.env)}`);
@@ -126,7 +126,7 @@ export const versionCommand: CommandDefinition = {
   summary: 'Display CLI version information',
   usage: 'govplane version [options]',
   description: 'Display the installed Govplane CLI version and runtime information.',
-  requiresRuntimeKit: false,
+  requiresToolkit: false,
   options: [
     verboseOption,
     formatOption,

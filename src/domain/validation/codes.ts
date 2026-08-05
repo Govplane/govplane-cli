@@ -2,8 +2,8 @@
  * Validation error codes.
  *
  * The `PARITY_*` group mirrors the failures raised by the remote runtime-bundle
- * validator used during safe bundle materialisation, so a bundle that passes
- * `govplane validate` also passes remote validation.
+ * validator used when the control plane materialises a bundle, so a bundle that
+ * passes `govplane validate` also passes remote validation.
  */
 export const ValidationCode = {
   // Document level

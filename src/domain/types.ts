@@ -3,7 +3,7 @@
  *
  * The runtime bundle shape mirrors the contract enforced by the Govplane
  * control plane (`RuntimeBundleV1`) so that local validation stays in parity
- * with remote safe-bundle materialisation.
+ * with remote bundle materialisation.
  */
 
 export const DOCUMENT_TYPES = ['bundle', 'draft', 'auto'] as const;

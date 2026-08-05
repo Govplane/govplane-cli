@@ -90,7 +90,7 @@ describe('govplane version --check', () => {
   });
 });
 
-describe('runtime kit aware behaviour', () => {
+describe('CLI toolkit aware behaviour', () => {
   let sandbox: Sandbox;
 
   beforeEach(() => {
@@ -116,7 +116,7 @@ describe('runtime kit aware behaviour', () => {
   it('does not send the user in a circle when the kit lacks a command', async () => {
     const result = await runCli(['simulate'], sandbox);
 
-    expect(result.code).toBe(ExitCode.RuntimeKitUnavailable);
+    expect(result.code).toBe(ExitCode.ToolkitUnavailable);
     expect(result.stderr).toContain('does not provide "simulate" yet');
     expect(result.stderr).toContain('npm install --global @govplane/toolkit@latest');
     expect(result.stderr).not.toContain('govplane --install-kit');

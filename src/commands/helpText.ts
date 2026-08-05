@@ -22,17 +22,17 @@ const groupOf = (command: CommandDefinition): CommandGroup => {
   if (command.name === 'working-folder') {
     return 'working-folder';
   }
-  return command.requiresRuntimeKit ? 'runtime-kit' : 'basic';
+  return command.requiresToolkit ? 'toolkit' : 'basic';
 };
 
 const SECTION_TITLES: Record<CommandGroup, string> = {
   basic: 'Basic commands:',
   'working-folder': 'Working folder:',
   activation: 'Activation:',
-  'runtime-kit': 'Runtime Kit commands:',
+  'toolkit': 'CLI Toolkit commands:',
 };
 
-const SECTION_ORDER: CommandGroup[] = ['basic', 'working-folder', 'activation', 'runtime-kit'];
+const SECTION_ORDER: CommandGroup[] = ['basic', 'working-folder', 'activation', 'toolkit'];
 
 /** Renders `govplane help`. */
 export const renderGeneralHelp = (
@@ -56,10 +56,10 @@ export const renderGeneralHelp = (
       reporter.line(`  ${pad(command.name, NAME_COLUMN)}${command.summary}`);
     });
 
-    if (group === 'runtime-kit') {
+    if (group === 'toolkit') {
       reporter.line();
       reporter.line(reporter.muted(
-        '  Runtime Kit required. The Runtime Kit is free and runs locally.',
+        '  CLI Toolkit required. The CLI Toolkit is free and runs locally.',
       ));
     }
   });
@@ -91,9 +91,9 @@ export const renderCommandHelp = (reporter: Reporter, command: CommandDefinition
   reporter.line('Usage:');
   reporter.line(`  ${command.usage}`);
 
-  if (command.requiresRuntimeKit) {
+  if (command.requiresToolkit) {
     reporter.line();
-    reporter.line('Runtime Kit required.');
+    reporter.line('CLI Toolkit required.');
   }
 
   if (command.subcommands !== undefined && command.subcommands.length > 0) {

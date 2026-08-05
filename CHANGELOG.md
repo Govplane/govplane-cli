@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   profile still requires `orgId` and `projectId`; the local-first profile used by
   `govplane build` reports their absence as a warning instead.
 - Injectable clock (`RunOptions.now`), `canonicalDocument()` for signed
-  documents that are not bundles, and a Runtime Kit discovery bridge that merges
+  documents that are not bundles, and a CLI Toolkit discovery bridge that merges
   toolkit commands into the registry.
 - Optional `stdin` on `CliStreams` and `CommandContext`, for commands that
   prompt. Kept optional and paired with an `isTTY` check so a command never
@@ -35,7 +35,7 @@ First open-source release of the Govplane CLI.
 ### Added
 
 - `govplane validate` — validates policy drafts and runtime bundles in parity
-  with the remote validator used during safe bundle materialisation. Supports
+  with the remote validator used during bundle materialisation. Supports
   `--type`, `--strict`, `--format`, `--quiet`, `--config` and `--working-folder`.
 - `govplane inspect` — human-readable summaries of drafts and bundles, plus
   `--policies`, `--policy`, `--targets`, `--context` and `--signature`, with
@@ -50,7 +50,7 @@ First open-source release of the Govplane CLI.
   persisted CLI configuration, current terminal directory.
 - Project configuration through `govplane.config.json`, with `--config`
   overrides.
-- Runtime Kit detection: `analyze`, `build`, `sign`, `simulate` and `policies`
+- CLI Toolkit detection: `analyze`, `build`, `sign`, `simulate` and `policies`
   are documented and report how to enable them, without ever installing
   anything automatically.
 - Canonical bundle projection, SHA-256 checksum verification, ETag derivation

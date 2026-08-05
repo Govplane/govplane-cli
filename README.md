@@ -50,7 +50,7 @@ Nothing here phones home. The only command that can touch the network is
 `govplane version --check`, and only when you pass that flag explicitly.
 
 Advanced tooling — `analyze`, `build`, `sign`, `simulate` and `policies` — is
-provided by the free [Govplane Runtime Kit](#runtime-kit-commands). The CLI
+provided by the free [Govplane CLI Toolkit](#toolkit-commands). The CLI
 documents those commands and tells you how to install the kit, but never
 installs anything on its own.
 
@@ -115,7 +115,7 @@ govplane inspect  -w ./examples --policies
 
 ## Commands
 
-| Command          | Purpose                                     | Runtime Kit |
+| Command          | Purpose                                     | CLI Toolkit |
 | ---------------- | ------------------------------------------- | ----------- |
 | `validate`       | Validate a policy draft or bundle           | No          |
 | `inspect`        | Inspect a policy draft or bundle            | No          |
@@ -153,17 +153,17 @@ govplane inspect --context          # context fields referenced by policies
 govplane inspect --signature        # signature metadata and verification
 ```
 
-### Runtime Kit commands
+### CLI Toolkit commands
 
 `analyze`, `build`, `sign`, `simulate` and `policies` are part of the free
-Govplane Runtime Kit. Without it installed, the CLI explains what to do and
+Govplane CLI Toolkit. Without it installed, the CLI explains what to do and
 exits with code `7` — it never starts a download or a registration flow by
 itself:
 
 ```text
-The build command requires the Govplane Runtime Kit.
+The build command requires the Govplane CLI Toolkit.
 
-The Runtime Kit is free and runs locally.
+The CLI Toolkit is free and runs locally.
 
 Install it with:
   govplane --install-kit
@@ -235,14 +235,14 @@ Every command supports `--format text` (default) and `--format json`, plus
 | `3`  | Invalid CLI arguments                                               |
 | `4`  | Unsupported schema, unsupported Node.js, or signature check failed  |
 | `5`  | Unexpected internal error                                           |
-| `7`  | Runtime Kit unavailable or inactive                                 |
+| `7`  | CLI Toolkit unavailable or inactive                                 |
 
 See [`docs/exit-codes.md`](docs/exit-codes.md).
 
 ## Runtime bundle parity
 
 Local validation mirrors the remote validator used when Govplane materialises a
-safe bundle, so a bundle that passes `govplane validate` also passes remote
+bundle, so a bundle that passes `govplane validate` also passes remote
 validation.
 
 Checksums and signatures are computed over the **canonical payload**: the

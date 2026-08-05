@@ -39,7 +39,7 @@ Every path is resolved **relative to the working folder**:
 <working-folder>/dist/runtime-bundle.json
 ```
 
-Unknown fields are ignored, so a configuration file shared with the Runtime Kit
+Unknown fields are ignored, so a configuration file shared with the CLI Toolkit
 works with the basic CLI too.
 
 ### Using a different file

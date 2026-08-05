@@ -8,7 +8,7 @@
 export { run, main, type RunOptions, type CliStreams } from './cli.js';
 export {
   commands, mergeCommands, findCommandIn, commandNames, allOptionSpecs,
-  runtimeKitCommands,
+  toolkitCommands,
 } from './commands/registry.js';
 export type {
   CommandContext, CommandDefinition, CommandArgument, CommandGroup,
@@ -43,8 +43,8 @@ export {
 } from './core/projectConfig.js';
 export { readUserConfig, writeUserConfig, type UserConfig } from './core/userConfig.js';
 export {
-  detectRuntimeKit, runtimeKitRequiredMessage, type RuntimeKitStatus,
-} from './core/runtimeKit.js';
+  detectToolkit, toolkitRequiredMessage, type ToolkitStatus,
+} from './core/toolkit.js';
 export {
   atomicWriteFile, backupFile, ensureDirectory, isDirectory, isFile, readTextFile,
   DEFAULT_MAX_FILE_BYTES,
@@ -54,7 +54,7 @@ export {
   systemClock, fixedClock, daysElapsed, fileTimestamp, type Clock,
 } from './core/clock.js';
 export {
-  resolveGovplaneHome, userConfigPath, runtimeKitManifestPath, projectStatePath,
+  resolveGovplaneHome, userConfigPath, toolkitManifestPath, projectStatePath,
   projectTempPath, GOVPLANE_DIRECTORY,
 } from './core/paths.js';
 export { supportsColor } from './core/color.js';

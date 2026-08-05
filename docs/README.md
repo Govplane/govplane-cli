@@ -12,7 +12,7 @@ Every command documented here runs offline and requires no Govplane account.
 | [version](commands/version.md) | `govplane version` |
 | [help](commands/help.md) | `govplane help` |
 | [working-folder](commands/working-folder.md) | `govplane working-folder` |
-| [Runtime Kit commands](commands/runtime-kit.md) | `analyze`, `build`, `sign`, `simulate`, `policies` |
+| [CLI Toolkit commands](commands/toolkit.md) | `analyze`, `build`, `sign`, `simulate`, `policies` |
 
 ## Reference
 

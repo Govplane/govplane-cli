@@ -18,7 +18,7 @@ const stubCommand = (
   name,
   summary: `${name} summary`,
   usage: `govplane ${name}`,
-  requiresRuntimeKit: false,
+  requiresToolkit: false,
   options: [],
   run: (context) => {
     context.reporter.line(`${name} ran`);
@@ -64,7 +64,7 @@ describe('mergeCommands', () => {
   });
 });
 
-describe('commands contributed by the Runtime Kit', () => {
+describe('commands contributed by the CLI Toolkit', () => {
   let sandbox: Sandbox;
 
   beforeEach(() => {
@@ -81,12 +81,12 @@ describe('commands contributed by the Runtime Kit', () => {
     expect(result.stdout).toContain('activate ran');
   });
 
-  it('takes over a Runtime Kit placeholder', async () => {
+  it('takes over a CLI Toolkit placeholder', async () => {
     const withoutKit = await runWith(['build'], sandbox, []);
-    expect(withoutKit.code).toBe(ExitCode.RuntimeKitUnavailable);
+    expect(withoutKit.code).toBe(ExitCode.ToolkitUnavailable);
 
     const withKit = await runWith(['build'], sandbox, [
-      stubCommand('build', { requiresRuntimeKit: true }),
+      stubCommand('build', { requiresToolkit: true }),
     ]);
     expect(withKit.code).toBe(ExitCode.Success);
     expect(withKit.stdout).toContain('build ran');
@@ -125,7 +125,7 @@ describe('commands contributed by the Runtime Kit', () => {
 
   it('gives an option the meaning its own command declares', async () => {
     // `--context` is a boolean for `inspect` and carries a JSON payload for the
-    // Runtime Kit's `simulate`. Interpreting argv against a single merged table
+    // CLI Toolkit's `simulate`. Interpreting argv against a single merged table
     // would apply whichever spec was registered first, and quietly hand one
     // command the other's meaning.
     const contributed = stubCommand('evaluate', {

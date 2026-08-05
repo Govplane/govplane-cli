@@ -16,18 +16,18 @@ export const ExitCode = {
   Compatibility: 4,
   InternalError: 5,
   /**
-   * Runtime Kit commands: a command-specific conflict, such as a duplicate
+   * CLI Toolkit commands: a command-specific conflict, such as a duplicate
    * policy key. Shares the numeric slot the basic CLI uses for internal errors,
    * because the toolkit reports those as `ToolkitInternalError` instead.
    */
   Conflict: 5,
-  /** Runtime Kit commands: a write, report or versioning failure. */
+  /** CLI Toolkit commands: a write, report or versioning failure. */
   WriteError: 6,
-  /** Runtime Kit commands: the runtime engine failed to evaluate. */
+  /** CLI Toolkit commands: the runtime engine failed to evaluate. */
   RuntimeEvaluationError: 6,
-  /** Reserved for Runtime Kit commands: the kit is not installed or not active. */
-  RuntimeKitUnavailable: 7,
-  /** Runtime Kit commands: unexpected internal error. The basic CLI uses 5. */
+  /** Reserved for CLI Toolkit commands: the kit is not installed or not active. */
+  ToolkitUnavailable: 7,
+  /** CLI Toolkit commands: unexpected internal error. The basic CLI uses 5. */
   ToolkitInternalError: 8,
 } as const;
 

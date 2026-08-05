@@ -1,16 +1,16 @@
 import { existsSync } from 'node:fs';
 import { readTextFile } from './files.js';
 import { parseJson } from './json.js';
-import { runtimeKitManifestPath } from './paths.js';
+import { toolkitManifestPath } from './paths.js';
 
-export interface RuntimeKitStatus {
+export interface ToolkitStatus {
   installed: boolean;
   version: string | null;
   manifestPath: string;
 }
 
 /** Kit presence as resolved for a single invocation. */
-export interface ResolvedRuntimeKit {
+export interface ResolvedToolkit {
   /** Set when the kit is present but could not be loaded. */
   failure?: string | null;
   /** Why resolution failed, shown under --verbose. */
@@ -20,15 +20,15 @@ export interface ResolvedRuntimeKit {
 }
 
 /**
- * Reports whether the Govplane Runtime Kit (the free advanced toolkit) is
+ * Reports whether the Govplane CLI Toolkit (the free advanced toolkit) is
  * installed locally.
  *
  * Detection is a local filesystem lookup only — the basic CLI never contacts
  * Govplane infrastructure to answer this question, and never triggers an
  * installation as a side effect.
  */
-export const detectRuntimeKit = (env?: NodeJS.ProcessEnv): RuntimeKitStatus => {
-  const manifestPath = runtimeKitManifestPath(env);
+export const detectToolkit = (env?: NodeJS.ProcessEnv): ToolkitStatus => {
+  const manifestPath = toolkitManifestPath(env);
 
   if (!existsSync(manifestPath)) {
     return { installed: false, version: null, manifestPath };
@@ -51,19 +51,19 @@ export const detectRuntimeKit = (env?: NodeJS.ProcessEnv): RuntimeKitStatus => {
 };
 
 /**
- * Message shown when a Runtime Kit command is invoked without the kit.
+ * Message shown when a CLI Toolkit command is invoked without the kit.
  *
  * `failure` is set when the kit is present but unusable. Telling somebody who
  * has installed it to install it wastes their afternoon, so when we know better
  * we say so.
  */
-export const runtimeKitRequiredMessage = (
+export const toolkitRequiredMessage = (
   command: string,
   failure?: string | null,
 ): string[] => {
   if (failure) {
     return [
-      `The ${command} command requires the Govplane Runtime Kit, which is installed`,
+      `The ${command} command requires the Govplane CLI Toolkit, which is installed`,
       'but could not be loaded.',
       '',
       failure,
@@ -74,9 +74,9 @@ export const runtimeKitRequiredMessage = (
   }
 
   return [
-    `The ${command} command requires the Govplane Runtime Kit.`,
+    `The ${command} command requires the Govplane CLI Toolkit.`,
     '',
-    'The Runtime Kit is free and runs locally.',
+    'The CLI Toolkit is free and runs locally.',
     '',
     'Install it with:',
     '  govplane --install-kit',

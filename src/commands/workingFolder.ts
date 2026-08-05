@@ -263,7 +263,7 @@ export const workingFolderCommand: CommandDefinition = {
   usage: 'govplane working-folder [set <path> | reset | init] [options]',
   description: 'Show the resolved working folder, persist a default one, or initialise '
     + 'Govplane files inside it.',
-  requiresRuntimeKit: false,
+  requiresToolkit: false,
   subcommands: [
     { name: 'set', summary: 'Persist a default working folder' },
     { name: 'reset', summary: 'Remove the persisted working folder' },

@@ -28,14 +28,14 @@ Basic commands:
 Working folder:
   working-folder    Show or configure the working folder
 
-Runtime Kit commands:
+CLI Toolkit commands:
   analyze           Analyse the codebase for policy evaluation points
   build             Build a policy bundle from drafts
   sign              Sign a policy bundle
   simulate          Simulate policy evaluations locally
   policies          Manage local policy drafts
 
-  Runtime Kit required. The Runtime Kit is free and runs locally.
+  CLI Toolkit required. The CLI Toolkit is free and runs locally.
 
 Global options:
   -w, --working-folder <path>   Directory Govplane reads and writes project files in
@@ -55,7 +55,7 @@ Run "govplane help <command>" for command documentation.
 ```
 
 Registration is never required for the basic commands, and the help output says
-so by omission: only Runtime Kit commands are labelled.
+so by omission: only CLI Toolkit commands are labelled.
 
 ## Command help
 

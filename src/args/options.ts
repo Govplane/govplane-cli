@@ -52,7 +52,7 @@ export const versionOption: OptionSpec = {
 export const installKitOption: OptionSpec = {
   name: 'install-kit',
   type: 'boolean',
-  description: 'Show how to install the Govplane Runtime Kit',
+  description: 'Show how to install the Govplane CLI Toolkit',
 };
 
 /** Options every command accepts, so behaviour and naming stay consistent. */
