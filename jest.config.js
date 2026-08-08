@@ -32,5 +32,5 @@ export default {
       statements: 80,
     },
   },
-  coverageReporters: ['text-summary', 'lcov'],
+  coverageReporters: ['text-summary', 'lcov', 'cobertura'],
 };
