@@ -290,4 +290,4 @@ the [Code of Conduct](CODE_OF_CONDUCT.md). Security issues: see
 
 ## License
 
-[MIT](LICENSE) © Govplane
+[MIT](LICENSE) © Platformstack Technologies OÜ. and contributors. See [NOTICE.md](NOTICE.md) for third-party notices.
