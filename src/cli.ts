@@ -160,7 +160,7 @@ const printInstallKitGuidance = (
   reporter.line('The Govplane CLI Toolkit is free and runs locally.');
   reporter.line();
   reporter.line('Install it with:');
-  reporter.line('  npm install --global @govplane/toolkit');
+  reporter.line('  npm install --global @govplane/cli-toolkit');
   reporter.line();
   reporter.line('The basic CLI commands — validate, inspect, version, help and working-folder —');
   reporter.line('never require the CLI Toolkit, an account or network access.');

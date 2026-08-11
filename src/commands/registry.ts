@@ -45,7 +45,7 @@ const toolkitCommand = (
         + `"${name}" yet.`,
       '',
       'Update it with:',
-      '  npm install --global @govplane/toolkit@latest',
+      '  npm install --global @govplane/cli-toolkit@latest',
     ]);
     return ExitCode.ToolkitUnavailable;
   },

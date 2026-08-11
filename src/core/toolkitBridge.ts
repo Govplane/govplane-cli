@@ -6,7 +6,7 @@ import { parseJson } from './json.js';
 import type { CommandDefinition } from '../commands/types.js';
 
 /** Package that provides the CLI Toolkit commands when it is installed. */
-export const TOOLKIT_PACKAGE = '@govplane/toolkit';
+export const TOOLKIT_PACKAGE = '@govplane/cli-toolkit';
 
 const isCommandDefinition = (value: unknown): value is CommandDefinition => {
   if (typeof value !== 'object' || value === null) {

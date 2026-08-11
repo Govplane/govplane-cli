@@ -71,7 +71,7 @@ describe('command dispatch', () => {
   it('explains how to install the CLI Toolkit', async () => {
     const result = await runCli(['--install-kit'], sandbox);
     expect(result.code).toBe(ExitCode.Success);
-    expect(result.stdout).toContain('npm install --global @govplane/toolkit');
+    expect(result.stdout).toContain('npm install --global @govplane/cli-toolkit');
   });
 });
 

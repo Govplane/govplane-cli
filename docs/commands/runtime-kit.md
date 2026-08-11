@@ -38,7 +38,7 @@ Explains how to enable the toolkit:
 The Govplane CLI Toolkit is free and runs locally.
 
 Install it with:
-  npm install --global @govplane/toolkit
+  npm install --global @govplane/cli-toolkit
 
 The basic CLI commands — validate, inspect, version, help and working-folder —
 never require the CLI Toolkit, an account or network access.

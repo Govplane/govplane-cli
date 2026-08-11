@@ -118,7 +118,7 @@ describe('CLI toolkit aware behaviour', () => {
 
     expect(result.code).toBe(ExitCode.ToolkitUnavailable);
     expect(result.stderr).toContain('does not provide "simulate" yet');
-    expect(result.stderr).toContain('npm install --global @govplane/toolkit@latest');
+    expect(result.stderr).toContain('npm install --global @govplane/cli-toolkit@latest');
     expect(result.stderr).not.toContain('govplane --install-kit');
   });
 
