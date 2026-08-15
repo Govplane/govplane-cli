@@ -27,6 +27,22 @@ describe('canonicalDocument', () => {
     expect(parsed.signature).toBeUndefined();
   });
 
+  // Giving an email address is optional, so a licence may carry no subject. The key must
+  // then be absent rather than empty: `{"subject":{}}` is a different byte string, and a
+  // signer and a verifier that disagree about which form to use produce a licence that
+  // fails to verify with nothing to point at the cause.
+  it('omits an absent subject rather than emitting it empty', () => {
+    const { subject, ...anonymous } = licenceBody();
+    const canonical = canonicalDocument(anonymous).toString('utf8');
+
+    expect(canonical).not.toContain('subject');
+    expect(Object.keys(JSON.parse(canonical) as Record<string, unknown>).sort()).toEqual([
+      'issuedAt', 'licenseId', 'marketingConsent', 'plan', 'schemaVersion', 'terms',
+    ]);
+    expect(canonicalDocument({ ...anonymous, subject: {} }).toString('utf8'))
+      .not.toBe(canonical);
+  });
+
   it('is independent of key order', () => {
     const body = licenceBody();
     const reordered = {

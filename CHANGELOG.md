@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2026-08-15
+
+### Changed
+
+- `canonicalDocument` is now covered for documents with **no `subject` field**,
+  which is the shape an activation licence takes when it was issued without an
+  email address. The function itself is unchanged — it already omitted absent
+  keys — but the behaviour is now pinned, including that an omitted `subject`
+  and a `"subject": {}` produce different bytes. That distinction is what keeps
+  a signer and a verifier from silently disagreeing.
+
 ## [1.0.3] - 2026-08-11
 
 ### Correction

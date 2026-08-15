@@ -1,6 +1,6 @@
 {
   "name": "@govplane/cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Govplane CLI — validate and inspect Govplane policy drafts and bundles locally, with no account and no network required.",
   "keywords": [
     "govplane",
