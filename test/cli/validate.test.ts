@@ -5,7 +5,10 @@ import { ExitCode } from '../../src/core/exitCodes.js';
 import {
   createSandbox, runCli, type Sandbox,
 } from '../helpers/harness.js';
-import { validBundleWithChecksum, validDraft } from '../helpers/fixtures.js';
+import type { ValidationResult } from '../../src/domain/validation/result.js';
+import {
+  halfScopedBundle, localBundle, validBundleWithChecksum, validDraft,
+} from '../helpers/fixtures.js';
 
 describe('govplane validate', () => {
   let sandbox: Sandbox;
@@ -33,6 +36,56 @@ describe('govplane validate', () => {
     const path = sandbox.writeJson('custom/policies.json', validBundleWithChecksum());
     const result = await runCli(['validate', path], sandbox);
     expect(result.code).toBe(ExitCode.Success);
+  });
+
+  describe('a locally built bundle', () => {
+    // `govplane build` with no --org-id writes a bundle with no scope, which is
+    // the shape the build spec calls for. `validate` used to reject that same
+    // file with two MISSING_SCOPE_FIELDS errors and exit 1 — the CLI refusing
+    // its own output.
+
+    it('is accepted, with the absent scope reported as a warning', async () => {
+      sandbox.writeJson('policy-bundle.json', localBundle());
+
+      const result = await runCli(['validate', '--format', 'json'], sandbox);
+      const payload = result.json() as ValidationResult;
+
+      expect(result.code).toBe(ExitCode.Success);
+      expect(payload.documentType).toBe('bundle');
+      expect(payload.errors).toEqual([]);
+      expect(payload.warnings.map((warning) => warning.code)).toContain('MISSING_SCOPE_FIELDS');
+    });
+
+    it('is recognised as a bundle rather than a draft', async () => {
+      // Unscoped and unsigned, so neither the scope test nor the integrity test
+      // identified it and the draft rules were applied instead.
+      const bundle = localBundle();
+      delete bundle.checksum;
+      sandbox.writeJson('policy-bundle.json', bundle);
+
+      const result = await runCli(['validate'], sandbox);
+
+      expect(result.code).toBe(ExitCode.Success);
+      expect(result.stdout).toContain('Type:     bundle');
+    });
+
+    it('fails under --strict, which is how to demand cloud parity', async () => {
+      sandbox.writeJson('policy-bundle.json', localBundle());
+
+      const result = await runCli(['validate', '--strict'], sandbox);
+
+      expect(result.code).toBe(ExitCode.Failure);
+    });
+
+    it('is still rejected when only half its scope is declared', async () => {
+      sandbox.writeJson('policy-bundle.json', halfScopedBundle());
+
+      const result = await runCli(['validate'], sandbox);
+
+      expect(result.code).toBe(ExitCode.Failure);
+      expect(result.stderr).toContain('MISSING_SCOPE_FIELDS');
+      expect(result.stderr).toContain('projectId is required');
+    });
   });
 
   it('fails with an actionable error when no document exists', async () => {

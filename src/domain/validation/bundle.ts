@@ -235,16 +235,22 @@ export interface BundleValidation {
   stats: ValidationStats;
 }
 
+/**
+ * Whether `orgId` and `projectId` are required.
+ *
+ * `required` is the cloud-compatible profile: a bundle the control plane
+ * materialises always carries its scope. `optional` is the local-first profile
+ * used by `govplane build`, where a developer can compile a bundle before
+ * deciding which organisation and project it belongs to.
+ */
+export type BundleScope = 'required' | 'optional';
+
 export interface ValidateBundleOptions {
   /**
-   * Whether `orgId` and `projectId` are required.
-   *
-   * `required` is the cloud-compatible profile and the default: a bundle the
-   * control plane materialises always carries its scope. `optional` is the
-   * local-first profile used by `govplane build`, where a developer can compile
-   * a bundle before deciding which organisation and project it belongs to.
+   * Defaults to `required`, so a caller that says nothing gets the stricter
+   * answer. `validateDocument` infers it per document instead.
    */
-  scope?: 'required' | 'optional';
+  scope?: BundleScope;
 }
 
 /**

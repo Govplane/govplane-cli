@@ -75,8 +75,12 @@ export {
   summariseBundle, summariseDraft, collectTargets, collectContextUsage, formatTarget,
   type BundleSummary, type DraftSummary, type PolicySummary,
 } from './domain/summary.js';
-export { validateDocument } from './domain/validation/index.js';
-export { validateBundle } from './domain/validation/bundle.js';
+export {
+  validateDocument, type ScopeOption, type ValidateDocumentInput,
+} from './domain/validation/index.js';
+export {
+  validateBundle, type BundleScope, type ValidateBundleOptions,
+} from './domain/validation/bundle.js';
 export { validateDraft } from './domain/validation/draft.js';
 export { ValidationCode, WarningCode } from './domain/validation/codes.js';
 export type {

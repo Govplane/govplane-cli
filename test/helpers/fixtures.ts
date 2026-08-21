@@ -33,6 +33,32 @@ export const validBundleWithChecksum = (): Record<string, unknown> => {
   return { ...bundle, checksum: computeChecksum(bundle) };
 };
 
+/**
+ * A bundle as `govplane build` writes it with no `--org-id` or `--project-id`.
+ *
+ * The local-first shape: the scope keys are omitted rather than left empty, and
+ * `specs/fixtures/signing/minimal-local.bundle.json` is the same document in
+ * the shared signing fixtures.
+ */
+export const localBundle = (): Record<string, unknown> => {
+  const bundle = validBundle();
+  delete bundle.orgId;
+  delete bundle.projectId;
+  return { ...bundle, checksum: computeChecksum(bundle) };
+};
+
+/**
+ * A bundle whose scope was half declared — `orgId` set, `projectId` forgotten.
+ *
+ * Not a local build and not a cloud bundle: somebody meant to scope it and
+ * stopped, which is the case the inferred profile is there to keep catching.
+ */
+export const halfScopedBundle = (): Record<string, unknown> => {
+  const bundle = validBundle();
+  delete bundle.projectId;
+  return { ...bundle, checksum: computeChecksum(bundle) };
+};
+
 export interface SignedBundleFixture {
   bundle: Record<string, unknown>;
   publicKeyPem: string;

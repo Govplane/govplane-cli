@@ -25,7 +25,14 @@ single run rather than stopping at the first one.
 Mirrors the validator the control plane runs when it materialises a bundle:
 
 - `schemaVersion` must be the number `1`.
-- `orgId`, `projectId` and `env` are required.
+- `env` is required.
+- `orgId` and `projectId` are required whenever either is present, and for any
+  bundle you intend to publish to Govplane Cloud. A bundle carrying **neither**
+  is a local build — what `govplane build` writes with no `--org-id` — and its
+  absent scope is reported as a `MISSING_SCOPE_FIELDS` *warning*, matching what
+  `govplane build` already reports for the same file. `--strict` turns it back
+  into an error, which is how to check a bundle is cloud-ready. Declaring half a
+  scope is always an error.
 - `env` must be one of `prod`, `staging`, `dev`, `test`.
 - `policies` must be an array.
 - Per policy: `policyKey` required and unique, `activeVersion` numeric,
@@ -119,6 +126,7 @@ Warnings do not fail validation unless `--strict` is used:
 | `INCOMPLETE_DRAFT` | A draft has no rules yet |
 | `EMPTY_DOCUMENT` | The document contains no policies |
 | `UNKNOWN_RULE_STATUS` | A bundle rule status is neither `active` nor `disabled` |
+| `MISSING_SCOPE_FIELDS` | A local bundle declares no `orgId` or `projectId`, so it cannot be used in Isolated Mode or published to Govplane Cloud |
 
 ```bash
 govplane validate --strict   # warnings become a non-zero exit

@@ -5,6 +5,42 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-08-21
+
+### Fixed
+
+- **`govplane validate` no longer rejects bundles `govplane build` produces.**
+  A build with no `--org-id` writes an unscoped bundle — the local-first shape
+  the [build spec](../../specs/cli-toolkit/cli_toolkit_build_spec.md) section
+  6.3 calls for, and what the `minimal-local` signing fixture represents.
+  `validate` then reported two `MISSING_SCOPE_FIELDS` **errors** and exited 1,
+  so the CLI refused its own output.
+
+  `validate` now infers the profile from the document. A bundle declaring no
+  scope at all is a local build, and its absent scope is a **warning** —
+  matching what `build` already reports for the same file. A bundle declaring
+  *half* a scope is still an error, because somebody meant to scope it and
+  stopped. `--strict` turns the warning back into a failure, which is how to
+  check a bundle is ready for Govplane Cloud.
+
+  The rule set itself is unchanged: `validateBundle` still defaults to the
+  cloud-compatible profile, and `analyze --compare` still uses it deliberately.
+
+- **An unscoped bundle is no longer mistaken for a draft.** Document detection
+  identified a bundle only by its scope fields or by a checksum or signature, so
+  a locally built, unsigned bundle was validated against the *draft* rules and
+  reported as "valid" for the wrong reasons — bundle problems were never
+  checked. A `bundleVersion` revision counter, or the numeric `schemaVersion 1`
+  that distinguishes a bundle from a draft's `"1.0"`, now identifies it. Both
+  checks apply only where the document would previously have been called a
+  draft, so nothing recognised as a bundle before can change.
+
+### Added
+
+- `BundleScope`, `ValidateBundleOptions`, `ScopeOption` and
+  `ValidateDocumentInput` are exported, so a consumer can name the scope
+  profile it is asking for instead of relying on an inline literal.
+
 ## [1.0.4] - 2026-08-15
 
 ### Changed

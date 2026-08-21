@@ -5,7 +5,7 @@ import { validateDraft } from '../../src/domain/validation/draft.js';
 import { validateDocument } from '../../src/domain/validation/index.js';
 import { computeChecksum } from '../../src/domain/canonical.js';
 import {
-  analyzeDraft, validBundle, validBundleWithChecksum, validDraft,
+  analyzeDraft, halfScopedBundle, localBundle, validBundle, validBundleWithChecksum, validDraft,
 } from '../helpers/fixtures.js';
 
 const codes = (issues: { code: string }[]): string[] => issues.map((issue) => issue.code);
@@ -25,6 +25,35 @@ describe('detectDocumentType', () => {
 
   it('detects bundles by integrity metadata alone', () => {
     expect(detectDocumentType({ checksum: 'sha256:abc' }).type).toBe('bundle');
+  });
+
+  it('detects an unscoped bundle by its revision counter', () => {
+    // What `govplane build` writes with no --org-id: no scope, no signature and
+    // no checksum to give it away. It used to be read as a draft and checked
+    // against the draft rules.
+    const detection = detectDocumentType({
+      schemaVersion: 1,
+      env: 'prod',
+      generatedAt: '2026-07-25T12:00:00.000Z',
+      bundleVersion: 1,
+      policies: [],
+    });
+
+    expect(detection.type).toBe('bundle');
+    expect(detection.reason).toContain('bundleVersion');
+  });
+
+  it('detects an unscoped bundle by its numeric schemaVersion', () => {
+    // `bundleVersion` is optional, so a hand-written bundle may carry none.
+    expect(detectDocumentType({ schemaVersion: 1, env: 'prod', policies: [] }).type)
+      .toBe('bundle');
+  });
+
+  it('still reads a draft as a draft when it declares its version as a string', () => {
+    // The distinction the numeric check above rests on: bundles say 1, drafts
+    // say "1.0". Pinned explicitly rather than left to `validDraft()`.
+    expect(detectDocumentType({ schemaVersion: '1.0', env: 'prod', policies: [] }).type)
+      .toBe('draft');
   });
 
   it('reports unknown documents', () => {
@@ -299,5 +328,69 @@ describe('validateDocument', () => {
     const result = validateDocument({ document: { hello: 'world' }, file: '/tmp/x.json' });
     expect(result.valid).toBe(false);
     expect(codes(result.errors)).toContain('UNKNOWN_DOCUMENT_TYPE');
+  });
+
+  describe('scope profile', () => {
+    it('accepts a locally built bundle that declares no scope', () => {
+      // The defect this inference exists to fix: `govplane build` with no
+      // --org-id produced a bundle `govplane validate` then rejected.
+      const result = validateDocument({ document: localBundle(), file: '/tmp/b.json' });
+
+      expect(result.valid).toBe(true);
+      expect(result.documentType).toBe('bundle');
+      expect(codes(result.errors)).not.toContain('MISSING_SCOPE_FIELDS');
+      expect(codes(result.warnings)).toContain('MISSING_SCOPE_FIELDS');
+    });
+
+    it('rejects a bundle that declares half a scope', () => {
+      // Not a local build — somebody started scoping it and stopped.
+      const result = validateDocument({ document: halfScopedBundle(), file: '/tmp/b.json' });
+
+      expect(result.valid).toBe(false);
+      expect(codes(result.errors)).toContain('MISSING_SCOPE_FIELDS');
+    });
+
+    it('treats a present but empty scope field as declared', () => {
+      const bundle = { ...localBundle(), orgId: '' };
+      const result = validateDocument({ document: bundle, file: '/tmp/b.json' });
+
+      expect(result.valid).toBe(false);
+      expect(codes(result.errors)).toContain('MISSING_SCOPE_FIELDS');
+    });
+
+    it('leaves a fully scoped bundle unaffected', () => {
+      const result = validateDocument({ document: validBundleWithChecksum(), file: '/tmp/b.json' });
+
+      expect(result.valid).toBe(true);
+      expect(codes(result.warnings)).not.toContain('MISSING_SCOPE_FIELDS');
+    });
+
+    it('can be overridden in either direction', () => {
+      // The third value exists so an explicit `--scope` flag could be added
+      // later without changing any of the behaviour above.
+      const strict = validateDocument({
+        document: localBundle(),
+        file: '/tmp/b.json',
+        scope: 'required',
+      });
+      expect(codes(strict.errors)).toContain('MISSING_SCOPE_FIELDS');
+
+      const lenient = validateDocument({
+        document: halfScopedBundle(),
+        file: '/tmp/b.json',
+        scope: 'optional',
+      });
+      expect(lenient.valid).toBe(true);
+      expect(codes(lenient.warnings)).toContain('MISSING_SCOPE_FIELDS');
+    });
+
+    it('still requires env, whichever profile applies', () => {
+      const bundle = localBundle();
+      delete bundle.env;
+      const result = validateDocument({ document: bundle, file: '/tmp/b.json', type: 'bundle' });
+
+      expect(result.valid).toBe(false);
+      expect(codes(result.errors)).toContain('MISSING_SCOPE_FIELDS');
+    });
   });
 });

@@ -2,8 +2,12 @@
  * Validation error codes.
  *
  * The `PARITY_*` group mirrors the failures raised by the remote runtime-bundle
- * validator used when the control plane materialises a bundle, so a bundle that
- * passes `govplane validate` also passes remote validation.
+ * validator used when the control plane materialises a bundle, so a *scoped*
+ * bundle that passes `govplane validate` also passes remote validation.
+ *
+ * The qualifier matters: a bundle with no `orgId` or `projectId` is a local
+ * build with no remote validation to pass, and `validate` reports its absent
+ * scope as a warning. `--strict` demands the cloud-compatible profile again.
  */
 export const ValidationCode = {
   // Document level
