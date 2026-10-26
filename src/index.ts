@@ -60,6 +60,7 @@ export {
 export { supportsColor } from './core/color.js';
 export {
   readCliVersion, isSupportedNodeVersion, unsupportedNodeMessage, MINIMUM_NODE_MAJOR,
+  PATCHED_NODE_RELEASES,
 } from './core/environment.js';
 
 export {

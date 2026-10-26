@@ -141,12 +141,37 @@ describe('environment', () => {
     expect(readCliVersion()).toMatch(/^\d+\.\d+\.\d+/);
   });
 
-  it('detects unsupported Node.js versions', () => {
-    expect(isSupportedNodeVersion('20.11.0')).toBe(true);
+  it('accepts only releases patched for CVE-2026-111497', () => {
+    expect(isSupportedNodeVersion('22.23.4')).toBe(true);
+    expect(isSupportedNodeVersion('22.24.0')).toBe(true);
+    expect(isSupportedNodeVersion('24.22.1')).toBe(true);
+    expect(isSupportedNodeVersion('v24.23.0')).toBe(true);
+    expect(isSupportedNodeVersion('26.12.1')).toBe(true);
+    expect(isSupportedNodeVersion('27.0.0')).toBe(true);
+
+    expect(isSupportedNodeVersion('22.23.3')).toBe(false);
+    expect(isSupportedNodeVersion('22.22.9')).toBe(false);
+    expect(isSupportedNodeVersion('24.22.0')).toBe(false);
+    expect(isSupportedNodeVersion('26.11.5')).toBe(false);
+  });
+
+  it('rejects lines that never received the fix', () => {
+    expect(isSupportedNodeVersion('25.9.0')).toBe(false);
+    expect(isSupportedNodeVersion('23.11.1')).toBe(false);
+    expect(isSupportedNodeVersion('20.19.5')).toBe(false);
     expect(isSupportedNodeVersion('18.19.0')).toBe(false);
+  });
+
+  it('rejects unparseable versions', () => {
     expect(isSupportedNodeVersion('nonsense')).toBe(false);
-    expect(unsupportedNodeMessage('18.19.0'))
-      .toBe('Govplane CLI requires Node.js 20 or later. Current version: Node.js 18.19.0');
+    expect(isSupportedNodeVersion('22')).toBe(false);
+  });
+
+  it('names every patched release in the message', () => {
+    expect(unsupportedNodeMessage('20.19.5')).toBe(
+      'Govplane CLI requires Node.js 22.23.4+, 24.22.1+, 26.12.1+ (CVE-2026-111497). '
+        + 'Current version: Node.js 20.19.5',
+    );
   });
 });
 

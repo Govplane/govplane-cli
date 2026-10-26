@@ -5,6 +5,44 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-10-26
+
+### Security
+
+- **Node.js 22.23.4, 24.22.1 or 26.12.1 is now the minimum.** These are the
+  21 October 2026 security releases, which fix CVE-2026-111497, a remote code
+  execution flaw in Node.js's Brotli decompression. The launcher and `main()`
+  now check the full release, not just the major. On Node.js 20, 23, 25 or
+  older, or on an unpatched 22, 24 or 26, the CLI stops with exit code 4
+  (compatibility), as it already did below the old floor:
+
+  ```text
+  Govplane CLI requires Node.js 22.23.4+, 24.22.1+, 26.12.1+ (CVE-2026-111497). Current version: Node.js 20.19.5
+  ```
+
+  The CLI's own only network request is the opt-in `govplane version --check`,
+  but it loads the toolkit, and through it the SDK, into the same process, so
+  it refuses unpatched runtimes outright. `engines` is
+  `>=22.23.4 <23 || >=24.22.1 <25 || >=26.12.1`. Strictly, dropping Node.js 20
+  is a breaking change. It ships in a minor release because no fixed release
+  exists on that line. `MINIMUM_NODE_MAJOR` is now `22`, and
+  `PATCHED_NODE_RELEASES` lists the floor on each line. CI tests 22, 24 and 26
+  on their latest patch releases.
+
+### Added
+
+- **The `requires_approval` effect.** Accepted as a rule effect and as a
+  policy default, in step with `@govplane/runtime-sdk` 2.3.0, where it gates
+  an action on a human with precedence just below `deny`. The optional
+  `approval` descriptor (`reason`, `approvers`, `expiresInSeconds`) must be an
+  object when present — `INVALID_RULE_EFFECT` on a rule,
+  `INVALID_APPROVAL_DEFAULT` on a default. A descriptor whose fields are not
+  what their names promise is `INCOMPLETE_RULE_EFFECT`, a warning, as with an
+  incomplete throttle.
+
+  A bundle using the effect is rejected by runtimes older than 2.3.0; upgrade
+  them before publishing one.
+
 ## [1.1.0] - 2026-08-21
 
 ### Fixed

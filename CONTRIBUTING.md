@@ -14,7 +14,7 @@ npm install
 npm test
 ```
 
-Requirements: Node.js 20 or later.
+Requirements: Node.js 22.23.4+, 24.22.1+ or 26.12.1+ (see the README).
 
 Useful scripts:
 

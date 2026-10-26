@@ -78,11 +78,13 @@ Verify:
 govplane version
 ```
 
-**Requirements:** Node.js 20 or later. On an older runtime the CLI stops with a
-clear message instead of a stack trace:
+**Requirements:** Node.js 22.23.4+, 24.22.1+ or 26.12.1+. These are the 21 October 2026 security
+releases, which fix CVE-2026-111497 in Node.js's Brotli decompression. Node.js
+20 and 25 are end of life and never received the fix. On any other runtime the
+CLI stops with a clear message instead of a stack trace:
 
 ```text
-Govplane CLI requires Node.js 20 or later. Current version: Node.js 18.19.0
+Govplane CLI requires Node.js 22.23.4+, 24.22.1+, 26.12.1+ (CVE-2026-111497). Current version: Node.js 20.19.5
 ```
 
 ## Quick start

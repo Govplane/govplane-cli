@@ -13,7 +13,9 @@ export type DocumentType = 'bundle' | 'draft' | 'unknown';
 export const ENVIRONMENTS = ['prod', 'staging', 'dev', 'test'] as const;
 export type EnvironmentName = (typeof ENVIRONMENTS)[number];
 
-export const EFFECT_TYPES = ['allow', 'deny', 'kill_switch', 'throttle', 'custom'] as const;
+export const EFFECT_TYPES = [
+  'allow', 'deny', 'kill_switch', 'requires_approval', 'throttle', 'custom',
+] as const;
 export type EffectType = (typeof EFFECT_TYPES)[number];
 
 export const COMPARISON_OPERATORS = ['eq', 'neq', 'gt', 'gte', 'lt', 'lte'] as const;
@@ -33,11 +35,22 @@ export interface Target {
   action: string;
 }
 
+/**
+ * What a `requires_approval` effect tells the host about the gate it wants.
+ * Every field is optional; the runtime passes it through and enforces nothing.
+ */
+export interface ApprovalDescriptor {
+  reason?: string;
+  approvers?: string[];
+  expiresInSeconds?: number;
+}
+
 export interface RuleEffect {
   type: EffectType | string;
   value?: string;
   killSwitch?: { service?: string; reason?: string };
   throttle?: { limit?: number; windowSeconds?: number; key?: string };
+  approval?: ApprovalDescriptor;
 }
 
 export interface PolicyDefaults {
@@ -45,6 +58,7 @@ export interface PolicyDefaults {
   customEffect?: string;
   killSwitch?: { service?: string; reason?: string };
   throttle?: { limit?: number; windowSeconds?: number; key?: string };
+  approval?: ApprovalDescriptor;
 }
 
 export interface ConditionNode {

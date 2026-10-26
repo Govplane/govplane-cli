@@ -22,6 +22,11 @@ describe('validateRuleEffect', () => {
       { type: 'custom', value: 'quarantine' },
       { type: 'kill_switch', killSwitch: { service: 'payments' } },
       { type: 'throttle', throttle: { limit: 10, windowSeconds: 60, key: 'ip' } },
+      { type: 'requires_approval' },
+      {
+        type: 'requires_approval',
+        approval: { reason: 'PII export', approvers: ['security'], expiresInSeconds: 900 },
+      },
     ];
 
     effects.forEach((effect) => {
@@ -41,6 +46,27 @@ describe('validateRuleEffect', () => {
   it('requires a value for custom effects', () => {
     expect(inspect((issues) => validateRuleEffect({ type: 'custom' }, '$.effect', issues)).errors)
       .toEqual(['INVALID_RULE_EFFECT']);
+  });
+
+  it('checks a requires_approval descriptor', () => {
+    // Not an object: the runtime refuses it, so this is an error.
+    expect(inspect((issues) => validateRuleEffect(
+      { type: 'requires_approval', approval: 'ask security' },
+      '$.effect',
+      issues,
+    ))).toEqual({ errors: ['INVALID_RULE_EFFECT'], warnings: [] });
+
+    // An object with a field a host cannot read as named: advisory.
+    expect(inspect((issues) => validateRuleEffect(
+      { type: 'requires_approval', approval: { approvers: 'security' } },
+      '$.effect',
+      issues,
+    ))).toEqual({ errors: [], warnings: ['INCOMPLETE_RULE_EFFECT'] });
+    expect(inspect((issues) => validateRuleEffect(
+      { type: 'requires_approval', approval: { expiresInSeconds: 0 } },
+      '$.effect',
+      issues,
+    ))).toEqual({ errors: [], warnings: ['INCOMPLETE_RULE_EFFECT'] });
   });
 
   it('warns — rather than fails — on effects the remote validator accepts', () => {
@@ -79,6 +105,24 @@ describe('validatePolicyDefaults', () => {
       .toEqual(['INVALID_DEFAULT_EFFECT']);
     expect(inspect((issues) => validatePolicyDefaults({ effect: 42 }, '$.defaults', issues)).errors)
       .toEqual(['INVALID_DEFAULT_EFFECT']);
+  });
+
+  it('accepts a requires_approval default and checks its descriptor', () => {
+    expect(inspect((issues) => validatePolicyDefaults(
+      { effect: 'requires_approval' },
+      '$.defaults',
+      issues,
+    ))).toEqual({ errors: [], warnings: [] });
+    expect(inspect((issues) => validatePolicyDefaults(
+      { effect: 'requires_approval', approval: ['security'] },
+      '$.defaults',
+      issues,
+    )).errors).toEqual(['INVALID_APPROVAL_DEFAULT']);
+    expect(inspect((issues) => validatePolicyDefaults(
+      { effect: 'requires_approval', approval: { reason: 42 } },
+      '$.defaults',
+      issues,
+    ))).toEqual({ errors: [], warnings: ['INCOMPLETE_RULE_EFFECT'] });
   });
 
   it('rejects incomplete kill_switch and throttle payloads', () => {

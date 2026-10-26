@@ -36,12 +36,15 @@ Mirrors the validator the control plane runs when it materialises a bundle:
 - `env` must be one of `prod`, `staging`, `dev`, `test`.
 - `policies` must be an array.
 - Per policy: `policyKey` required and unique, `activeVersion` numeric,
-  `defaults.effect` one of `allow`, `deny`, `kill_switch`, `throttle`,
-  `custom`, with the payload that effect requires, and `rules` an array.
+  `defaults.effect` one of `allow`, `deny`, `kill_switch`, `requires_approval`,
+  `throttle`, `custom`, with the payload that effect requires, and `rules` an
+  array. A `requires_approval` default may carry an `approval` descriptor,
+  which must be an object.
 - Per rule: `id` required and unique within the policy, `priority` numeric,
   `target.service`, `target.resource` and `target.action` required, and
   `effect` an object with a `type`. A `custom` effect needs a non-empty
-  `value`. `thenEffect` and `elseEffect` are validated the same way.
+  `value`; a `requires_approval` effect's `approval`, when present, must be an
+  object. `thenEffect` and `elseEffect` are validated the same way.
 
 ### Stage 3 — Condition AST (bundles)
 
@@ -122,7 +125,7 @@ Warnings do not fail validation unless `--strict` is used:
 | `MISSING_GENERATED_AT` | The bundle has no `generatedAt` |
 | `UNSIGNED_BUNDLE` | The bundle carries no signature metadata |
 | `UNKNOWN_EFFECT_TYPE` | An effect type the runtime does not evaluate |
-| `INCOMPLETE_RULE_EFFECT` | A `kill_switch` or `throttle` effect is missing its payload |
+| `INCOMPLETE_RULE_EFFECT` | A `kill_switch` or `throttle` effect is missing its payload, or a `requires_approval` descriptor has a field of the wrong type |
 | `INCOMPLETE_DRAFT` | A draft has no rules yet |
 | `EMPTY_DOCUMENT` | The document contains no policies |
 | `UNKNOWN_RULE_STATUS` | A bundle rule status is neither `active` nor `disabled` |
@@ -203,7 +206,8 @@ Several documents:
 `POLICIES_NOT_ARRAY`, `INVALID_POLICY`, `MISSING_POLICY_KEY`,
 `DUPLICATE_POLICY_KEY`, `INVALID_ACTIVE_VERSION`, `INVALID_DEFAULT_EFFECT`,
 `MISSING_KILL_SWITCH_SERVICE`, `INVALID_THROTTLE_DEFAULT`,
-`INVALID_CUSTOM_DEFAULT`, `RULES_NOT_ARRAY`, `INVALID_RULE`, `MISSING_RULE_ID`,
+`INVALID_CUSTOM_DEFAULT`, `INVALID_APPROVAL_DEFAULT`, `RULES_NOT_ARRAY`,
+`INVALID_RULE`, `MISSING_RULE_ID`,
 `DUPLICATE_RULE_ID`, `INVALID_RULE_PRIORITY`, `INVALID_RULE_TARGET`,
 `INVALID_RULE_EFFECT`, `INVALID_RULE_STATUS`, `INVALID_CONDITION_AST`,
 `UNSUPPORTED_CONDITION_OPERATOR`, `INVALID_GENERATED_AT`,

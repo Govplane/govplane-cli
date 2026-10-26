@@ -29,6 +29,7 @@ export const ValidationCode = {
   MissingKillSwitchService: 'MISSING_KILL_SWITCH_SERVICE',
   InvalidThrottleDefault: 'INVALID_THROTTLE_DEFAULT',
   InvalidCustomDefault: 'INVALID_CUSTOM_DEFAULT',
+  InvalidApprovalDefault: 'INVALID_APPROVAL_DEFAULT',
   RulesNotArray: 'RULES_NOT_ARRAY',
   InvalidRule: 'INVALID_RULE',
   MissingRuleId: 'MISSING_RULE_ID',

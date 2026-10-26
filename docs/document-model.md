@@ -89,6 +89,7 @@ bundle called `policies.json` is still recognised as a bundle. Use
 | `allow` | — | — |
 | `deny` | — | — |
 | `kill_switch` | `killSwitch.service` (+ optional `reason`) | `killSwitch.service` (required) |
+| `requires_approval` | `approval` (optional object: `reason`, `approvers[]`, `expiresInSeconds`) | same, optional |
 | `throttle` | `throttle.limit`, `throttle.windowSeconds`, `throttle.key` | same, required |
 | `custom` | `value` (non-empty string, required) | `customEffect` (non-empty string, required) |
 

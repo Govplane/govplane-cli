@@ -129,7 +129,8 @@ validates remotely.
 Checks that are warnings for exactly this reason:
 
 - An effect `type` the runtime does not evaluate (`UNKNOWN_EFFECT_TYPE`).
-- A `kill_switch` or `throttle` rule effect without its payload
+- A `kill_switch` or `throttle` rule effect without its payload, or a
+  `requires_approval` descriptor with a mistyped field
   (`INCOMPLETE_RULE_EFFECT`).
 - A bundle rule `status` that is neither `active` nor `disabled`
   (`UNKNOWN_RULE_STATUS`).
